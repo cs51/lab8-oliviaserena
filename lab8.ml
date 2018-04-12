@@ -161,7 +161,7 @@ Exercise 4: Given your implementation of Event, create a new event
 called "newswire" that should pass strings to the event handlers.
 ......................................................................*)
 
-let newswire = fun _ -> failwith "newswire not implemented" ;;
+let newswire : string WEvent.event = WEvent.new_event() ;;
 
 (* News organizations might want to register event listeners to the
 newswire so that they might report on stories. Below are functions
@@ -179,7 +179,8 @@ Exercise 5: Register these two news organizations as listeners to the
 newswire event.
 ......................................................................*)
 
-(* .. *)
+let fnn_listener : WEvent.id = WEvent.add_listener newswire fakeNewsNetwork ;;
+let bf_listener : WEvent.id = WEvent.add_listener newswire buzzFake ;;
 
 (* Here are some headlines to play with. *)
 
@@ -191,8 +192,10 @@ let h3 = "bactrian camels can weigh up to 2200lbs!" ;;
 Exercise 6: Finally, fire newswire events with the above three
 headlines, and observe what happens!
 ......................................................................*)
+WEvent.fire_event newswire h1;;
+WEvent.fire_event newswire h2;;
+WEvent.fire_event newswire h3;;
 
-(* .. *)
 
 (* Imagine now that you work at Facebook, and you're growing concerned
 with the proliferation of fake news. To combat the problem, you decide
@@ -205,14 +208,16 @@ the publications don't publish right away. *)
 Exercise 7: Remove the newswire listeners that were previously registered.
 ......................................................................*)
 
-(* .. *)
+WEvent.remove_listener newswire fnn_listener ;;
+WEvent.remove_listener newswire bf_listener ;;
+
 
 (*......................................................................
 Exercise 8: Create a new event called publish to signal that all
 stories should be published. The event should be a unit WEvent.event.
 ......................................................................*)
 
-let publish = fun _ -> failwith "publish not implemented" ;;
+let publish : 'a WEvent.event = WEvent.new_event() ;;
 
 (*......................................................................
 Exercise 9: Write a function receive_report to handle new news
@@ -223,7 +228,8 @@ by registering appropriate listeners, one for each news network,
 waiting for the publish event.
 ......................................................................*)
 
-let receive_report = fun _ -> failwith "report not implemented";;
+let receive_report (s : string) : unit =
+  WEvent.add_listener newswire    ;;
 
 (*......................................................................
 Exercise 10: Register the receieve_report listener to listen for the
