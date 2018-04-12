@@ -229,14 +229,16 @@ waiting for the publish event.
 ......................................................................*)
 
 let receive_report (s : string) : unit =
-  WEvent.add_listener newswire    ;;
+  ignore (WEvent.add_listener publish (fun () -> buzzFake s));
+  ignore (WEvent.add_listener publish (fun () -> fakeNewsNetwork s)) ;;
 
 (*......................................................................
 Exercise 10: Register the receieve_report listener to listen for the
 newswire event.
 ......................................................................*)
 
-(* .. *)
+let receive_listener : WEvent.id = WEvent.add_listener newswire receive_report ;;
+
 
 (* Here are some new headlines to use for testing this part. *)
 
@@ -251,7 +253,7 @@ the news. (They've just queued up a bunch of listeners on the publish
 event instead.)
 ......................................................................*)
 
-(* .. *)
+let _ = List.iter (WEvent.fire_event newswire) [h4;h5;h6] ;;
 
 print_string "Moved to publication.\n" ;;
 
@@ -261,4 +263,4 @@ out the headlines. You should see the headlines printed after
 the line above.
 ......................................................................*)
 
-(* .. *)
+let _ = WEvent.fire_event publish() ;;
